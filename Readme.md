@@ -1,5 +1,11 @@
 # ppx_import - javascript-style imports for reason/ocaml
 
+## Why?
+
+This is more concise than doing a ton of lets, and more specific than an `open`.
+
+## What does it look like?
+
 Now you get to
 ```
 [%%import thing][@@from Source1];
