@@ -1,0 +1,7 @@
+(jbuild_version 1)
+
+(executable
+ ((name ppx_import)
+  (public_name ppx_import)
+  (libraries (lib ocaml-migrate-parsetree))
+  ))
