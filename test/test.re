@@ -21,12 +21,11 @@ let fixtures = [(/* (input, output) */
     let two = Three.two;
   ]
 ), (
-  [%str [%%import (One, one, Two, two)][@@from Three]],
+  [%str [%%import (One child, Two (Child (grandchild, grandchild2)))][@@from Three]],
   [%str
-    let module One = Three.One;
-    let one = Three.one;
-    let module Two = Three.Two;
-    let two = Three.two;
+    let child = Three.One.child;
+    let grandchild1 = Three.Two.Child.grandchild1;
+    let grandchild2 = Three.Two.Child.grandchild2;
   ]
 ), (
   [%str
@@ -59,6 +58,7 @@ let invalid = [
 
 let run () => {
   let (total, failures) = List.fold_left (fun (total, failures) (input, expected) => {
+    try {
     let result = Lib.mapper.structure Lib.mapper input;
     if (result != expected) {
       print_endline ">> Input:";
@@ -70,6 +70,15 @@ let run () => {
       (total + 1, failures + 1)
     } else {
       (total + 1, failures)
+    }
+    } {
+      | Location.Error error => {
+        print_endline ">> Input:";
+        print_endline (show_structure input);
+        print_endline ">> Error:";
+        print_endline error.Location.msg;
+        (total + 1, failures + 1)
+      }
     }
   }) (0, 0) fixtures;
 
