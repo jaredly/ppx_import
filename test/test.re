@@ -21,11 +21,18 @@ let fixtures = [(/* (input, output) */
     let two = Three.two;
   ]
 ), (
-  [%str [%%import (One child, Two (Child (grandchild, grandchild2)))][@@from Three]],
+  [%str [%%import (One child, Two (Child (grandchild1, grandchild2)))][@@from Three]],
   [%str
     let child = Three.One.child;
     let grandchild1 = Three.Two.Child.grandchild1;
     let grandchild2 = Three.Two.Child.grandchild2;
+  ]
+), (
+  [%str [%%import One.Two (five, Six.Seven ((), eight))][@@from Three.Four]],
+  [%str
+    let five = Three.Four.One.Two.five;
+    let module Seven = Three.Four.One.Two.Six.Seven;
+    let eight = Three.Four.One.Two.Six.Seven.eight;
   ]
 ), (
   [%str
@@ -37,6 +44,36 @@ let fixtures = [(/* (input, output) */
     let two = Three.two;
     let x = 10;
   ]
+), (
+  [%str [%%import One.Two.three][@@from Source]],
+  [%str let three = Source.One.Two.three]
+), (
+  [%str [%%import One.Two (three, Four.five)][@@from Source]],
+  [%str
+    let three = Source.One.Two.three;
+    let five = Source.One.Two.Four.five;
+  ]
+), (
+  [%str [%%import One (two, Three)][@@from Source]],
+  [%str
+    let two = Source.One.two;
+    let module Three = Source.One.Three;
+  ]
+), (
+  [%str [%%import One.Two.three][@@from Source]],
+  [%str let three = Source.One.Two.three]
+), (
+  [%str [%%import One.Two.three][@@from Source]],
+  [%str let three = Source.One.Two.three]
+), (
+  [%str let x = {
+    [%import One.Two.three][@from Source];
+    three
+  }],
+  [%str let x = {
+    let three = Source.One.Two.three;
+    three
+  }]
 )];
 
 /* Not implemented yet */
